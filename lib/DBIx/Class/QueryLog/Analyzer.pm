@@ -1,9 +1,14 @@
 package DBIx::Class::QueryLog::Analyzer;
-use Moose;
+use Moo;
+use Scalar::Util ();
 
 has querylog => (
     is => 'rw',
-    isa => 'DBIx::Class::QueryLog'
+    isa => sub {
+        my $blessed = Scalar::Util::blessed($_[0]);
+        die "$_[0] is not an Object!"
+            unless $blessed && $blessed eq 'DBIx::Class::QueryLog';
+    }
 );
 
 =head1 NAME
@@ -183,7 +188,5 @@ This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
 
 =cut
-
-__PACKAGE__->meta->make_immutable;
 
 1;
